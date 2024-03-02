@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/init-tables-02-03-2024.yaml
+  - include:
+      file: db/changelog/changeset/add-super-user.yml

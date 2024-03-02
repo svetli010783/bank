@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-super-user
+      author: mixer
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: "nextval('users_id_seq'::regclass)"
+              - column:
+                  name: name
+                  value: "Super"
+              - column:
+                  name: surname
+                  value: "User"
+              - column:
+                  name: login
+                  value: "superuser"
+              - column:
+                  name: password
+                  value: "superpassword"
+        - insert:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  valueComputed: "nextval('bank_account_id_seq'::regclass)"
+              - column:
+                  name: current_balance
+                  value: "0"
+              - column:
+                  name: start_balance
+                  value: "0"

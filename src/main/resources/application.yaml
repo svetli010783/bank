@@ -1,0 +1,31 @@
+jwt:
+  secret:
+    key: ${JWT_KEY:984hg493gh0439rthr0429uruj2309yasfasfasfasfash937gc763fe87t3f8234123213231asfas1evs1231edasfdvzxc332eqwdasfdsavfsac9723gf}
+  token:
+    access:
+      expiration: ${JWT_ACCESS_EXPIRATION:31536000000}
+
+server:
+  port: 8088
+  address: 127.0.0.1
+  forward-headers-strategy: framework
+  error:
+    include-message: always
+
+spring:
+  datasource:
+    password: ${DATASOURCE_PASSWORD:serhio20}
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/bankdb}
+    username: ${DATASOURCE_USERNAME:postgres}
+  jpa:
+    show-sql: false
+  liquibase:
+    enabled: true
+    change-log: db.changelog-master.yaml
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  config: src\main\resources\logback.xml

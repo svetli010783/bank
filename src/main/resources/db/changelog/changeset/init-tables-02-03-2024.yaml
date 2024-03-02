@@ -1,0 +1,387 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-tables-02-03-2024
+      context: ddl
+      author: m1xer
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: user_id_pkey
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: datetime
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'CURRENT_TIMESTAMP'
+              - column:
+                  name: deleted_at
+                  type: datetime
+              - column:
+                  name: birthdate
+                  type: date
+                  constraints:
+                    nullable: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: surname
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patronymic
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: bank_account_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: login
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: phone_number
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'CURRENT_TIMESTAMP'
+              - column:
+                  name: deleted_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: phone_number
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+            constraints:
+              - uniqueConstraint:
+                  columnNames:
+                    - phone_number
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - owner_id
+                  baseTableName: phone_number
+                  constraintName: fk_phone_number_owner_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: users
+        - createTable:
+            tableName: users_phone_numbers
+            columns:
+              - column:
+                  name: phone_numbers_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+            primaryKey:
+              - columnNames:
+                  - phone_numbers_id
+                  - user_id
+            constraints:
+              - uniqueConstraint:
+                  constraintName: users_phone_numbers_phone_numbers_id_key
+                  columnNames:
+                    - phone_numbers_id
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - phone_numbers_id
+                  baseTableName: users_phone_numbers
+                  constraintName: fk_users_phone_numbers_phone_numbers_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: phone_number
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - user_id
+                  baseTableName: users_phone_numbers
+                  constraintName: fk_users_phone_number_user_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: users
+        - createTable:
+            tableName: email
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'CURRENT_TIMESTAMP'
+              - column:
+                  name: deleted_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+            constraints:
+              - uniqueConstraint:
+                  columnNames:
+                    - email
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - owner_id
+                  baseTableName: email
+                  constraintName: fk_email_owner_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: users
+        - createTable:
+            tableName: users_emails
+            columns:
+              - column:
+                  name: emails_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+            primaryKey:
+              - columnNames:
+                  - emails_id
+                  - user_id
+            constraints:
+              - uniqueConstraint:
+                  constraintName: users_emails_emails_id_key
+                  columnNames:
+                    - emails_id
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - user_id
+                  baseTableName: users_emails
+                  constraintName: fk_users_emails_user_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: users
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - emails_id
+                  baseTableName: users_emails
+                  constraintName: fk_users_emails_emails_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: email
+        - createTable:
+            tableName: bank_account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: current_balance
+                  type: double precision
+                  constraints:
+                    nullable: true
+              - column:
+                  name: start_balance
+                  type: double precision
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'CURRENT_TIMESTAMP'
+              - column:
+                  name: deleted_at
+                  type: timestamptz(6)
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: bank_account_transactions
+            columns:
+              - column:
+                  name: bank_account_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: transaction_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+            primaryKey:
+              - columnNames:
+                  - bank_account_id
+                  - transaction_id
+            constraints:
+              - uniqueConstraint:
+                  constraintName: bank_account_transactions_transaction_id_key
+                  columnNames:
+                    - transaction_id
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - bank_account_id
+                  baseTableName: bank_account_transactions
+                  constraintName: fk_bank_account_transactions_bank_account_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: bank_account
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - transaction_id
+                  baseTableName: bank_account_transactions
+                  constraintName: fk_bank_account_transactions_transaction_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: transaction
+        - createTable:
+            tableName: transaction
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: transfer_amount
+                  type: double precision
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+                    defaultValueComputed: 'CURRENT_TIMESTAMP'
+              - column:
+                  name: deleted_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: recipient_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: sender_id
+                  type: bigint
+                  constraints:
+                    nullable: true
+              - column:
+                  name: state
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+            constraints:
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - recipient_id
+                  baseTableName: transaction
+                  constraintName: fk_transaction_recipient_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: bank_account
+              - foreignKeyConstraint:
+                  baseColumnNames:
+                    - sender_id
+                  baseTableName: transaction
+                  constraintName: fk_transaction_sender_id
+                  referencedColumnNames:
+                    - id
+                  referencedTableName: bank_account
+              - checkConstraint:
+                  constraintName: transaction_state_check
+                  expression: state::text = ANY (ARRAY['CREATE'::character varying, 'PROCESSING'::character varying, 'COMPLETE'::character varying]::text[])
+              - checkConstraint:
+                  constraintName: transaction_type_check
+                  expression: type::text = ANY (ARRAY['REGISTRATION'::character varying, 'TRANSFER'::character varying, 'CHANGE_INTEREST'::character varying]::text[])
+        - addDefaultValue:
+            columnName: created_at
+            defaultValueComputed: 'CURRENT_TIMESTAMP'
+            tableName: users
+        - addDefaultValue:
+            columnName: created_at
+            defaultValueComputed: 'CURRENT_TIMESTAMP'
+            tableName: bank_account
+        - addDefaultValue:
+            columnName: created_at
+            defaultValueComputed: 'CURRENT_TIMESTAMP'
+            tableName: email
+        - addDefaultValue:
+            columnName: created_at
+            defaultValueComputed: 'CURRENT_TIMESTAMP'
+            tableName: phone_number
+        - addDefaultValue:
+            columnName: created_at
+            defaultValueComputed: 'CURRENT_TIMESTAMP'
+            tableName: transaction
